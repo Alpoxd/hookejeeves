@@ -8,7 +8,7 @@ float Rosenbrok_function(std::vector <float> X0) {
 }
 
 float example_function(std::vector <float> X0) {
-	return (pow(X0[0] - 2, 2) + pow(X0[1] - 9, 2) + X0[0] * X0[1]);
+	return (3 * pow(X0[0], 4) - 6 * pow(X0[0], 2) + 4 * X0[0] * X0[1] + pow(X0[1], 2));
 }
 
 float manage_function(int functionId, std::vector <float> X0) {
@@ -28,7 +28,7 @@ void print_function(int functionId) {
 		std::cout << "\nRosenbrok Function: Q(x1,x2) = 100 * (x2 - x1^2)^2 + (1 - x1)^2 -> min \n" << std::endl;
 		break;
 	case 1:
-		std::cout << "\nExample Function: Q(x1,x2) = (x1 - 2)^2 + (x2 - 9)^2 + x1*x2 -> min \n" << std::endl;
+		std::cout << "\nExample Function: Q(x1,x2) -> min \n" << std::endl;
 		break;
 	}
 }
@@ -49,8 +49,9 @@ std::vector <float> neighborhood_search(std::vector <float> X0, float delta, int
 
 	std::vector <float> point_x1_fixed = { newPoint[0], X0[1] + delta };
 
-	if (manage_function(functionId, point_x1_fixed) < manage_function(functionId, X0))
+	if (manage_function(functionId, point_x1_fixed) < manage_function(functionId, X0)) {
 		newPoint.push_back(point_x1_fixed[1]);
+	}
 	else {
 		point_x1_fixed[1] = X0[1] - delta;
 		if (manage_function(functionId, point_x1_fixed) < manage_function(functionId, X0))
@@ -96,22 +97,22 @@ void HookeJeevesAlgorythm(std::vector <float> X0, float delta, int step_reductio
 			X1 = X2;
 			counter++;
 		}
+		//std::cout << X0[0] << " " << X0[1] << std::endl;
 	}
 	std::cout << "\nresult:\nX = (" << X1[0] << ", " << X1[1] << ")\nQ(X) = " << manage_function(functionId, X1) << "\ndelta = " << delta << "\niterations:  " << counter - 1 << "\n\n" << std::endl;
 }
 
 void main(void) {
-	std::vector <float> X0 = { -1.1, -1.5 };
+	std::vector <float> X0 = { -1, 1 };
 
 	float delta = 1;
 	int step_reduction_coef = 2;
-	float end_point_param = 0.0000001;
+	float end_point_param = 10e-7;
 	int functionId = 0;
 
 	HookeJeevesAlgorythm(X0, delta, step_reduction_coef, end_point_param, functionId);
 
-	X0 = { -8, -9 };
-	end_point_param = 0.001;
+	X0 = { -2, 2 };
 	functionId = 1;
 
 	HookeJeevesAlgorythm(X0, delta, step_reduction_coef, end_point_param, functionId);
